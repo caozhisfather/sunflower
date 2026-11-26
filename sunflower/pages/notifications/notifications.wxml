@@ -1,0 +1,36 @@
+<view wx:if="{{authState === 'onboard'}}" class="state-wrap">
+    <text class="state-text">先到首页选择身份并填写昵称</text>
+    <view class="state-retry" bindtap="goHome">去首页</view>
+</view>
+
+<view wx:else class="main">
+    <view wx:if="{{list.length > 0}}" class="notice-actions">
+        <text class="notice-mark-all" bindtap="markAll">全部标为已读</text>
+    </view>
+
+    <view wx:if="{{loading}}" class="state-wrap">
+        <text class="state-text">正在加载…</text>
+    </view>
+
+    <view wx:elif="{{list.length === 0}}" class="state-wrap">
+        <text class="state-text">暂无消息</text>
+    </view>
+
+    <block wx:else>
+        <view
+            wx:for="{{list}}"
+            wx:key="id"
+            class="card list-card notice-card {{item.read ? 'notice-read' : ''}}"
+            bindtap="openItem"
+            data-id="{{item.id}}"
+            data-order-id="{{item.orderId || ''}}"
+        >
+            <view class="row-top">
+                <text class="row-title">{{item.title}}</text>
+                <view wx:if="{{!item.read}}" class="notice-dot"></view>
+            </view>
+            <text class="row-sub">{{item.body}}</text>
+            <text wx:if="{{item.orderId}}" class="row-meta">点击查看订单详情 ›</text>
+        </view>
+    </block>
+</view>

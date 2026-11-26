@@ -1,0 +1,139 @@
+<view class="main jobs-page">
+    <view wx:if="{{!available}}" class="state-wrap">
+        <text class="state-text">{{error || '正在加载岗位…'}}</text>
+    </view>
+    <block wx:else>
+        <text class="row-meta jobs-mode">本地演示 · 仅在此设备可见，请使用测试资料</text>
+        <view class="jobs-tabs">
+            <button class="{{tab === 'list' ? 'btn-primary' : 'btn-ghost'}}" data-tab="list" bindtap="selectTab">{{role === 'business' ? '我的岗位' : '找兼职'}}</button>
+            <button class="{{tab !== 'list' ? 'btn-primary' : 'btn-ghost'}}" data-tab="{{role === 'business' ? 'publish' : 'mine'}}" bindtap="selectTab">{{role === 'business' ? '发布岗位' : '我的申请'}}</button>
+        </view>
+        <view wx:if="{{role === 'interpreter'}}" class="jobs-action">
+            <text class="jobs-link" data-tab="{{tab === 'blocked' ? 'list' : 'blocked'}}" bindtap="selectTab">{{tab === 'blocked' ? '返回岗位大厅' : '管理已屏蔽发布方'}}</text>
+        </view>
+
+        <view wx:if="{{role === 'business' && tab === 'publish'}}" class="card form-card">
+            <view class="form-item">
+                <text class="form-label">岗位名称</text>
+                <input class="form-input" maxlength="40" value="{{form.title}}" data-field="title" bindinput="field" placeholder="例如：展会英语陪同" />
+            </view>
+            <view class="form-item">
+                <text class="form-label">服务日期与开始时间</text>
+                <picker mode="date" value="{{form.serviceDate}}" start="{{today}}" data-field="serviceDate" bindchange="field">
+                    <view class="picker-value">{{form.serviceDate}} ›</view>
+                </picker>
+                <picker mode="time" value="{{form.startTime}}" data-field="startTime" bindchange="field">
+                    <view class="picker-value">{{form.startTime}} ›</view>
+                </picker>
+            </view>
+            <view class="jobs-fields">
+                <view class="form-item">
+                    <text class="form-label">预计工时</text>
+                    <input class="form-input" type="digit" value="{{form.hours}}" data-field="hours" bindinput="field" placeholder="小时" />
+                </view>
+                <view class="form-item">
+                    <text class="form-label">招聘人数</text>
+                    <input class="form-input" type="number" value="{{form.slots}}" data-field="slots" bindinput="field" />
+                </view>
+            </view>
+            <view class="form-item">
+                <text class="form-label">每人薪资</text>
+                <picker range="{{payModes}}" value="{{form.payMode}}" data-field="payMode" bindchange="field">
+                    <view class="picker-value">{{payModes[form.payMode]}} ›</view>
+                </picker>
+                <input class="form-input" type="digit" value="{{form.rate}}" data-field="rate" bindinput="field" placeholder="金额（元）" />
+                <input class="form-input" type="digit" value="{{form.travelAllowance}}" data-field="travelAllowance" bindinput="field" placeholder="每人交通补贴（元，选填）" />
+            </view>
+            <view class="form-item">
+                <view class="row-top">
+                    <text class="form-label">服务地点</text>
+                    <text class="jobs-link" bindtap="chooseLocation">地图选点 ›</text>
+                </view>
+                <input class="form-input" maxlength="80" value="{{form.locationName}}" data-field="locationName" bindinput="field" placeholder="填写公开工作地点或地图选点" />
+                <text wx:if="{{place.address}}" class="row-meta">{{place.address}}</text>
+            </view>
+            <view class="form-item">
+                <text class="form-label">工作内容与要求</text>
+                <textarea class="form-textarea" maxlength="300" value="{{form.requirements}}" data-field="requirements" bindinput="field" placeholder="写清工作内容、语言能力和现场要求，请勿填写私人联系方式" />
+            </view>
+            <view class="form-item">
+                <text class="form-label">技能要求（选填）</text>
+                <block wx:for="{{skillGroups}}" wx:key="group" wx:for-item="group">
+                    <text class="skill-group-name">{{group.group}}</text>
+                    <view class="skill-tags">
+                        <text wx:for="{{group.tags}}" wx:key="*this" wx:for-item="skill" class="skill-tag {{skills[skill] ? 'skill-tag-on' : ''}}" data-skill="{{skill}}" bindtap="toggleSkill">{{skill}}</text>
+                    </view>
+                </block>
+            </view>
+            <view class="form-item">
+                <text class="form-label">补贴、超时与结算约定</text>
+                <textarea class="form-textarea" maxlength="300" value="{{form.terms}}" data-field="terms" bindinput="field" placeholder="例如交通补贴、超时计费、取消约定（选填）" />
+            </view>
+            <text wx:if="{{error}}" class="form-error">{{error}}</text>
+            <button class="btn-primary" bindtap="publish">发布到岗位大厅</button>
+        </view>
+
+        <block wx:else>
+            <view wx:if="{{role === 'interpreter' && tab === 'list'}}" class="card form-card">
+                <input class="form-input" value="{{keyword}}" data-field="keyword" bindinput="filter" placeholder="搜索岗位、地点或技能" />
+                <view class="jobs-fields">
+                    <input class="form-input" type="digit" value="{{minPay}}" data-field="minPay" bindinput="filter" placeholder="最低总薪资（元）" />
+                    <input class="form-input" type="digit" value="{{maxKm}}" data-field="maxKm" bindinput="filter" placeholder="最远校区距离（km）" />
+                </view>
+                <text wx:if="{{maxKm}}" class="row-meta">距离筛选只显示可计算距离的岗位。</text>
+                <input class="form-input" type="digit" value="{{minHourly}}" data-field="minHourly" bindinput="filter" placeholder="最低折算时薪（元/小时）" />
+                <view class="jobs-fields">
+                    <picker mode="time" value="{{fromTime || '09:00'}}" data-field="fromTime" bindchange="filter"><view class="picker-value">{{fromTime || '最早上岗时间'}}</view></picker>
+                    <picker mode="time" value="{{untilTime || '18:00'}}" data-field="untilTime" bindchange="filter"><view class="picker-value">{{untilTime || '最晚结束时间'}}</view></picker>
+                </view>
+                <view class="row-top jobs-action">
+                    <text class="jobs-link" bindtap="toggleAllowance">{{withAllowance ? '✓ ' : ''}}只看有交通补贴</text>
+                    <text wx:if="{{fromTime || untilTime}}" class="jobs-link" bindtap="clearTimeFilter">清除时段</text>
+                </view>
+            </view>
+            <view wx:if="{{results.length === 0}}" class="state-wrap">
+                <text class="state-text">{{role === 'business' ? '还没有发布岗位' : (tab === 'mine' ? '暂无申请记录' : (tab === 'blocked' ? '暂无已屏蔽发布方' : '没有符合条件的公开岗位'))}}</text>
+            </view>
+            <view wx:for="{{results}}" wx:key="id" class="card list-card">
+                <view class="row-top">
+                    <text class="row-title">{{item.title}}</text>
+                    <text class="jobs-pay">预计 ¥{{item.total}}</text>
+                </view>
+                <text class="row-sub">{{item.businessName}} · {{item.payLabel}} · {{item.hours}} 小时</text>
+                <text class="row-meta">折算 ¥{{item.hourlyLabel}}/小时{{item.travelAllowance > 0 ? ' · 交通补贴 ¥' + item.travelAllowance : ''}}</text>
+                <text class="row-meta">{{item.dateLabel}} {{item.startTime}} · {{item.locationName}}</text>
+                <text wx:if="{{role === 'interpreter'}}" class="row-meta">{{item.distanceLabel}}{{item.match !== null ? ' · 技能匹配 ' + item.match + '%' : ''}}</text>
+                <text class="row-meta">{{item.statusLabel}}{{item.applicationLabel ? ' · ' + item.applicationLabel : ''}}</text>
+                <text wx:if="{{item.requiredSkills}}" class="row-meta">技能要求 · {{item.requiredSkills}}</text>
+                <text class="row-meta jobs-detail">{{item.requirements}}</text>
+                <text wx:if="{{item.terms}}" class="row-meta jobs-detail">其他约定 · {{item.terms}}</text>
+
+                <block wx:if="{{role === 'interpreter'}}">
+                    <button wx:if="{{item.application.orderId}}" class="btn-ghost jobs-action" data-id="{{item.application.orderId}}" bindtap="goOrder">查看订单</button>
+                    <button wx:elif="{{item.application.status === 'applied'}}" class="btn-ghost jobs-action" data-id="{{item.application.id}}" bindtap="withdraw">撤回申请</button>
+                    <button wx:elif="{{item.open && !item.blocked && (!item.application || item.application.status === 'withdrawn')}}" class="btn-primary jobs-action" data-id="{{item.id}}" bindtap="apply">申请兼职</button>
+                    <view class="row-top jobs-action">
+                        <text class="jobs-link" data-id="{{item.id}}" bindtap="report">记录岗位问题</text>
+                        <text class="jobs-link" data-id="{{item.id}}" data-blocked="{{item.blocked}}" bindtap="toggleBlock">{{item.blocked ? '解除屏蔽' : '屏蔽发布方'}}</text>
+                    </view>
+                </block>
+                <block wx:else>
+                    <view wx:for="{{item.applications}}" wx:for-item="application" wx:key="id" class="jobs-applicant">
+                        <view>
+                            <text>{{application.interpreterName}} · {{application.label}}</text>
+                            <text wx:if="{{application.school || application.match !== null}}" class="row-meta">{{application.school}}{{application.match !== null ? ' · 技能匹配 ' + application.match + '%' : ''}}</text>
+                            <text wx:if="{{application.intro}}" class="row-meta">{{application.intro}}</text>
+                            <text wx:if="{{application.status === 'applied' && application.hasConflict}}" class="row-meta">当天已有预约</text>
+                        </view>
+                        <text wx:if="{{application.orderId}}" class="jobs-link" data-id="{{application.orderId}}" bindtap="goOrder">查看订单 ›</text>
+                        <view wx:elif="{{item.open && application.status === 'applied'}}">
+                            <text wx:if="{{!application.hasConflict}}" class="jobs-link" data-id="{{application.id}}" bindtap="hire">录用　</text>
+                            <text class="jobs-link" data-id="{{application.id}}" bindtap="reject">未录用</text>
+                        </view>
+                    </view>
+                    <button wx:if="{{item.open}}" class="btn-ghost jobs-action" data-id="{{item.id}}" bindtap="close">结束招聘</button>
+                </block>
+            </view>
+        </block>
+    </block>
+</view>

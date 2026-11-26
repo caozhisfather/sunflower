@@ -1,0 +1,66 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.detail-label {
+    display: block;
+    font-size: 25rpx;
+    color: #a89f94;
+}
+
+.detail-text {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 28rpx;
+    line-height: 1.7;
+    color: #2b2620;
+}
+
+.detail-strong {
+    font-size: 30rpx;
+    font-weight: 700;
+    color: #2b2620;
+}
+
+.price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10rpx 0;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 22rpx;
+}
+
+.timeline-dot {
+    flex-shrink: 0;
+    width: 16rpx;
+    height: 16rpx;
+    margin-top: 12rpx;
+    background: #f7b500;
+    border-radius: 8rpx;
+}
+
+.timeline-body {
+    margin-left: 18rpx;
+}
+
+.timeline-label {
+    display: block;
+    font-size: 27rpx;
+    color: #2b2620;
+}
+
+.timeline-time {
+    display: block;
+    margin-top: 4rpx;
+    font-size: 22rpx;
+    color: #b3a996;
+}
+
+.action-gap {
+    margin-top: 24rpx;
+}

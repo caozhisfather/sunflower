@@ -1,0 +1,29 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.price-box {
+    margin: 8rpx 0 28rpx;
+    padding: 20rpx 24rpx;
+    background: #fffbea;
+    border-radius: 18rpx;
+}
+
+.detail-label {
+    display: block;
+    font-size: 25rpx;
+    color: #a89f94;
+}
+
+.detail-strong {
+    font-size: 30rpx;
+    font-weight: 700;
+    color: #2b2620;
+}
+
+.price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8rpx 0;
+}

@@ -1,0 +1,49 @@
+.jobs-page {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.jobs-tabs,
+.jobs-fields {
+    display: flex;
+    gap: 16rpx;
+}
+
+.jobs-tabs {
+    margin-bottom: 24rpx;
+}
+
+.jobs-mode {
+    margin-bottom: 16rpx;
+}
+
+.jobs-tabs button,
+.jobs-fields > input,
+.jobs-fields > view {
+    flex: 1;
+    min-width: 0;
+}
+
+.jobs-pay,
+.jobs-link {
+    color: #8b5c00;
+    font-weight: 600;
+}
+
+.jobs-action,
+.jobs-detail {
+    margin-top: 16rpx;
+}
+
+.jobs-detail {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.jobs-applicant {
+    display: flex;
+    justify-content: space-between;
+    gap: 12rpx;
+    padding: 18rpx 0;
+    border-bottom: 1rpx solid #e9e2d2;
+    font-size: 26rpx;
+}

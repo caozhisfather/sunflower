@@ -1,0 +1,59 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/jobs/jobs",
+    "pages/orders/orders",
+    "pages/profile/profile",
+    "pages/task-detail/task-detail",
+    "pages/interpreter-detail/interpreter-detail",
+    "pages/order-create/order-create",
+    "pages/order-detail/order-detail",
+    "pages/availability/availability",
+    "pages/income/income",
+    "pages/profile-edit/profile-edit",
+    "pages/notifications/notifications",
+    "pages/business-detail/business-detail"
+  ],
+  "tabBar": {
+    "color": "#a89f94",
+    "selectedColor": "#c78d00",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "icons/icon-home.png",
+        "selectedIconPath": "icons/icon-home-active.png"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单消息",
+        "iconPath": "icons/icon-orders.png",
+        "selectedIconPath": "icons/icon-orders-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "icons/icon-profile.png",
+        "selectedIconPath": "icons/icon-profile-active.png"
+      }
+    ]
+  },
+  "window": {
+    "navigationBarTitleText": "Sunflower·英语陪同",
+    "navigationBarBackgroundColor": "#F7B500",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FAF9F4",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "requiredPrivateInfos": ["chooseLocation"],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于在地图上选择服务地点或公开校区，估算两点之间的距离"
+    }
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

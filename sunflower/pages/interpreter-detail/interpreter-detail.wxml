@@ -1,0 +1,60 @@
+<view wx:if="{{!interpreter}}" class="state-wrap">
+    <text class="state-text">译员不存在</text>
+</view>
+
+<view wx:else class="main">
+    <view class="card list-card head-card">
+        <view class="head-avatar">
+            <text>{{interpreter.initial}}</text>
+        </view>
+        <view class="head-info">
+            <text class="row-title">{{interpreter.name}}</text>
+            <text class="row-sub">{{interpreter.school}} {{interpreter.major}}</text>
+            <text class="row-meta">{{interpreter.englishLevel}}</text>
+        </view>
+        <view class="head-price">
+            <text class="price-num">¥{{interpreter.pricePerDay}}</text>
+            <text class="price-unit">/天</text>
+        </view>
+    </view>
+
+    <view class="card list-card">
+        <text class="detail-label">自我介绍</text>
+        <text class="detail-text">{{interpreter.intro || '暂无介绍'}}</text>
+    </view>
+
+    <view wx:if="{{skills.length > 0}}" class="card list-card">
+        <text class="detail-label">技能标签</text>
+        <view class="skill-tags skill-tags-static">
+            <text wx:for="{{skills}}" wx:key="*this" class="skill-tag skill-tag-static">{{item}}</text>
+        </view>
+    </view>
+
+    <view class="card list-card">
+        <view class="row-top">
+            <text class="detail-label">服务评价</text>
+            <text class="review-stars-text" wx:if="{{ratingCount > 0}}">★ {{ratingAvg}} · {{ratingCount}} 条</text>
+            <text class="row-meta" wx:else>暂无评价</text>
+        </view>
+        <view wx:for="{{recentReviews}}" wx:key="id" class="review-item">
+            <view class="row-top">
+                <text class="row-title">{{item.reviewerName}}</text>
+                <text class="review-stars-text">{{item.stars}}</text>
+            </view>
+            <text wx:if="{{item.comment}}" class="row-sub">{{item.comment}}</text>
+        </view>
+    </view>
+
+    <view class="card list-card">
+        <view class="price-row">
+            <text class="detail-label">未来一个月空闲天数</text>
+            <text class="detail-strong">{{freeDatesCount}} 天</text>
+        </view>
+        <view class="price-row">
+            <text class="detail-label">预约日期</text>
+            <text class="detail-strong">{{dateLabel}}</text>
+        </view>
+    </view>
+
+    <button class="btn-primary" bindtap="goOrderCreate">预约 TA</button>
+</view>

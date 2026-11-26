@@ -1,0 +1,55 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.section-label {
+    display: block;
+    margin: 30rpx 4rpx 16rpx;
+    font-size: 26rpx;
+    font-weight: 600;
+    color: #a89f94;
+}
+
+.row-link {
+    font-size: 26rpx;
+    color: #c78d00;
+}
+
+.booking-date-item {
+    margin-bottom: 0;
+}
+
+.interpreter-card {
+    display: flex;
+    align-items: flex-start;
+}
+
+.interpreter-avatar {
+    flex-shrink: 0;
+    width: 88rpx;
+    height: 88rpx;
+    line-height: 88rpx;
+    text-align: center;
+    font-size: 40rpx;
+    color: #4a3a00;
+    background: #ffe9a8;
+    border-radius: 44rpx;
+}
+
+.interpreter-info {
+    flex: 1;
+    margin-left: 22rpx;
+    min-width: 0;
+}
+
+.price-text {
+    font-size: 28rpx;
+    font-weight: 700;
+    color: #c78d00;
+}
+
+.task-summary {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

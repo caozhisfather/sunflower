@@ -1,0 +1,217 @@
+<view wx:if="{{authState === 'onboard'}}" class="onboard-wrap">
+    <view class="brand">
+        <text class="brand-emoji">🌻</text>
+        <text class="brand-title">Sunflower·英语陪同</text>
+        <text class="brand-desc">大学生英语陪同兼职与预约</text>
+    </view>
+
+    <view class="card form-card">
+        <view class="form-item">
+            <text class="form-label">你的昵称</text>
+            <input
+                class="form-input"
+                placeholder="填写昵称开始使用"
+                placeholder-class="picker-placeholder"
+                value="{{name}}"
+                bindinput="onNameInput"
+            />
+        </view>
+        <view wx:if="{{!registeredRole}}" class="form-item">
+            <text class="form-label">选择账号类型</text>
+            <text class="row-meta">首次开通后，账号类型将固定。</text>
+            <view class="role-row">
+                <view
+                    class="role-option {{role === 'interpreter' ? 'role-option-active' : ''}}"
+                    bindtap="pickRole"
+                    data-role="interpreter"
+                >
+                    <text class="role-icon">🎓</text>
+                    <text class="role-name">学生账号</text>
+                    <text class="role-desc">找兼职、管理申请</text>
+                </view>
+                <view
+                    class="role-option {{role === 'business' ? 'role-option-active' : ''}}"
+                    bindtap="pickRole"
+                    data-role="business"
+                >
+                    <text class="role-icon">🏢</text>
+                    <text class="role-name">企业账号</text>
+                    <text class="role-desc">发布岗位、管理招聘</text>
+                </view>
+            </view>
+        </view>
+        <view wx:else class="form-item">
+            <text class="form-label">账号类型</text>
+            <text class="row-sub">{{registeredRole === 'interpreter' ? '学生账号' : '企业账号'}}</text>
+        </view>
+        <button class="btn-primary" bindtap="submitOnboard">{{registeredRole ? '登录' : '开通账号'}}</button>
+    </view>
+</view>
+
+<view wx:elif="{{role === 'interpreter'}}" class="main">
+    <view class="role-bar">
+        <text class="row-title">学生工作台</text>
+    </view>
+
+    <navigator class="card list-card" url="/pages/jobs/jobs">
+        <view class="row-top"><text class="row-title">找兼职</text><text class="row-link">岗位大厅 ›</text></view>
+        <text class="row-sub">比较报酬、工时和距离，查看我的申请</text>
+    </navigator>
+
+    <view class="card list-card" bindtap="goAvailability">
+        <view class="row-top">
+            <text class="row-title">📅 我的空闲时间</text>
+            <text class="row-link">去设置 ›</text>
+        </view>
+        <text class="row-sub">设置未来一个月的空闲日期，商家才能筛到你</text>
+    </view>
+
+    <view class="card list-card">
+        <view class="row-top">
+            <text class="row-title">接单资料</text>
+            <text class="row-link" bindtap="goProfileEdit">编辑资料 ›</text>
+        </view>
+        <text class="row-sub">{{studentRate > 0 ? '我的日报价 ¥' + studentRate : '未设置日报价'}} · {{studentCampus || '未设置校区'}}</text>
+        <picker range="{{taskSortLabels}}" value="{{taskSort}}" bindchange="changeTaskSort">
+            <view class="picker-value">预约请求排序 · {{taskSortLabels[taskSort]}} ›</view>
+        </picker>
+    </view>
+
+    <view wx:if="{{pendingTasks.length > 0}}">
+        <text class="section-label">待接单（{{pendingTasks.length}}）</text>
+        <view
+            wx:for="{{pendingTasks}}"
+            wx:key="id"
+            class="card list-card"
+            bindtap="goTaskDetail"
+            data-id="{{item.id}}"
+        >
+            <view class="row-top">
+                <text class="row-title">{{item.title}}</text>
+                <text class="chip chip-pending">待接单</text>
+            </view>
+            <text class="row-sub">{{item.dateLabel}} {{item.startTime}}</text>
+            <text wx:if="{{item.match >= 0}}" class="row-meta match-text">🎯 与我的技能匹配 {{item.match}}%</text>
+            <text class="row-meta">服务地点 · {{item.location || '待商家确认'}}{{item.distanceLabel ? ' · 距校区直线 ' + item.distanceLabel : ''}}</text>
+            <text wx:if="{{item.requirements}}" class="row-meta task-summary">{{item.requirements}}</text>
+            <text class="row-meta">{{item.jobId ? '约定总薪资' : '日薪'}} ¥{{item.price}}{{item.belowRate ? ' · 低于我的日报价' : ''}}</text>
+        </view>
+    </view>
+
+    <view wx:if="{{activeTasks.length > 0}}">
+        <text class="section-label">进行中</text>
+        <view
+            wx:for="{{activeTasks}}"
+            wx:key="id"
+            class="card list-card"
+            bindtap="goTaskDetail"
+            data-id="{{item.id}}"
+        >
+            <view class="row-top">
+                <text class="row-title">{{item.title}}</text>
+                <text class="chip chip-{{item.status}}">{{item.statusLabel}}</text>
+            </view>
+            <text class="row-sub">{{item.dateLabel}} {{item.startTime}}</text>
+            <text class="row-meta">{{item.location || '服务地点待确认'}}{{item.distanceLabel ? ' · 距校区直线 ' + item.distanceLabel : ''}}</text>
+            <text class="row-meta">{{item.jobId ? '约定总薪资' : '日薪'}} ¥{{item.price}}</text>
+        </view>
+    </view>
+
+    <view wx:if="{{pendingTasks.length === 0 && activeTasks.length === 0}}" class="state-wrap">
+        <text class="state-text">暂时没有预约请求，保持空闲时间更新，商家会找到你</text>
+    </view>
+
+</view>
+
+<view wx:elif="{{role === 'business'}}" class="main">
+    <view class="role-bar">
+        <text class="row-title">企业工作台</text>
+    </view>
+
+    <navigator class="card list-card" url="/pages/jobs/jobs?tab=publish">
+        <view class="row-top"><text class="row-title">发布岗位</text><text class="row-link">岗位与申请 ›</text></view>
+        <text class="row-sub">公开招聘学生，也可以在下方直接预约</text>
+    </navigator>
+
+    <view class="card list-card">
+        <view class="form-item booking-date-item">
+            <text class="form-label">选择服务日期，筛选当天有空闲的译员</text>
+            <picker mode="date" value="{{pickDate}}" start="{{firstBookableDate}}" end="2030-12-31" bindchange="onDateChange">
+                <view class="picker-value">📆 {{dateLabel}}</view>
+            </picker>
+        </view>
+        <view class="form-item">
+            <text class="form-label">最高日预算（元/天）</text>
+            <input class="form-input" type="digit" value="{{budget}}" placeholder="不限预算" bindblur="applyBudget" />
+        </view>
+        <view class="form-item">
+            <view class="row-top">
+                <text class="form-label">服务地点</text>
+                <text wx:if="{{servicePlace}}" class="skill-clear" bindtap="clearServicePlace">清除</text>
+            </view>
+            <view class="picker-value" bindtap="pickServicePlace">{{servicePlace ? servicePlace.name || servicePlace.address : '选择服务地点，估算译员距离'}} ›</view>
+        </view>
+        <picker range="{{candidateSortLabels}}" value="{{candidateSort}}" bindchange="changeCandidateSort">
+            <view class="picker-value">排序 · {{candidateSortLabels[candidateSort]}} ›</view>
+        </picker>
+        <view class="form-item">
+            <view class="row-top">
+                <text class="form-label">需要哪些技能 <text class="optional">（选填，按匹配度排序）</text></text>
+                <text wx:if="{{skillFilterCount > 0}}" class="skill-clear" bindtap="clearSkillFilter">清除</text>
+            </view>
+            <block wx:for="{{skillGroups}}" wx:key="group" wx:for-item="g">
+                <text class="skill-group-name">{{g.group}}</text>
+                <view class="skill-tags">
+                    <text
+                        wx:for="{{g.tags}}"
+                        wx:key="*this"
+                        wx:for-item="tag"
+                        class="skill-tag {{skillFilterMap[tag] ? 'skill-tag-on' : ''}}"
+                        bindtap="toggleSkillFilter"
+                        data-tag="{{tag}}"
+                    >{{tag}}</text>
+                </view>
+            </block>
+        </view>
+        <view class="fav-filter" bindtap="toggleFavOnly">
+            <text class="fav-filter-text {{favOnly ? 'fav-filter-on' : ''}}">♥ 只看收藏</text>
+        </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="state-wrap">
+        <text class="state-text">正在筛选译员…</text>
+    </view>
+
+    <view wx:elif="{{interpreters.length === 0}}" class="state-wrap">
+        <text class="state-text">{{searched ? '当前条件下没有合适的译员，试试调整日期、预算或收藏筛选' : '选择日期后为你筛选译员'}}</text>
+    </view>
+
+    <block wx:else>
+        <view
+            wx:for="{{interpreters}}"
+            wx:key="ownerId"
+            class="card list-card interpreter-card"
+            bindtap="goInterpreterDetail"
+            data-owner="{{item.ownerId}}"
+        >
+            <view class="interpreter-avatar">
+                <text>{{item.initial}}</text>
+            </view>
+            <view class="interpreter-info">
+                <view class="row-top">
+                    <text class="row-title">{{item.name}}</text>
+                    <view class="price-fav">
+                        <text class="price-text">¥{{item.pricePerDay}}/天</text>
+                        <text class="fav-heart {{item.fav ? 'fav-on' : ''}}" catchtap="toggleFavorite" data-owner="{{item.ownerId}}">{{item.fav ? '♥' : '♡'}}</text>
+                    </view>
+                </view>
+                <text class="row-sub">{{item.school}} · {{item.englishLevel}}</text>
+                <text wx:if="{{servicePlace}}" class="row-meta">{{item.distanceLabel ? '距服务地点直线 ' + item.distanceLabel : '未提供校区距离'}}</text>
+                <text wx:if="{{item.match >= 0}}" class="row-meta match-text">🎯 技能匹配 {{item.match}}%</text>
+                <text wx:if="{{item.ratingCount > 0}}" class="row-meta rating-meta">★ {{item.ratingAvg}} · {{item.ratingCount}} 条评价</text>
+                <text class="row-meta">{{item.intro}}</text>
+            </view>
+        </view>
+    </block>
+
+</view>

@@ -1,0 +1,28 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.head-card {
+    display: flex;
+    align-items: center;
+}
+
+.head-avatar {
+    width: 108rpx;
+    height: 108rpx;
+    margin-right: 24rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44rpx;
+    font-weight: 600;
+    color: #4a3a00;
+    background: #f7b500;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.head-info {
+    flex: 1;
+    min-width: 0;
+}

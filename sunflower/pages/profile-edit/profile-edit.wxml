@@ -1,0 +1,74 @@
+<view class="main">
+    <view class="card form-card">
+        <view class="form-item">
+            <text class="form-label">姓名 / 昵称</text>
+            <input class="form-input" value="{{name}}" placeholder="必填" placeholder-class="picker-placeholder" bindinput="bindField" data-field="name" />
+        </view>
+
+        <block wx:if="{{role === 'interpreter'}}">
+            <view class="form-item">
+                <text class="form-label">学校</text>
+                <input class="form-input" value="{{school}}" placeholder="例如 深圳大学" placeholder-class="picker-placeholder" bindinput="bindField" data-field="school" />
+            </view>
+            <view class="form-item">
+                <text class="form-label">专业 <text class="optional">（选填）</text></text>
+                <input class="form-input" value="{{major}}" placeholder="例如 英语翻译" placeholder-class="picker-placeholder" bindinput="bindField" data-field="major" />
+            </view>
+            <view class="form-item">
+                <text class="form-label">校区参考点 <text class="optional">（选填）</text></text>
+                <view class="picker-value" bindtap="chooseCampus">{{campusName || '在地图上选择公开校区'}}</view>
+                <text class="row-meta">用于估算到服务地点的直线距离，请选择学校等公开地点。</text>
+                <text wx:if="{{campusName}}" class="map-link" bindtap="clearCampus">移除参考点</text>
+            </view>
+            <view class="form-item">
+                <text class="form-label">英语能力</text>
+                <input class="form-input" value="{{englishLevel}}" placeholder="例如 专八 / 雅思 7.5 / 六级 580" placeholder-class="picker-placeholder" bindinput="bindField" data-field="englishLevel" />
+            </view>
+            <view class="form-item">
+                <text class="form-label">日报价（元/天）</text>
+                <input class="form-input" type="digit" value="{{pricePerDay}}" placeholder="例如 350" placeholder-class="picker-placeholder" bindinput="bindField" data-field="pricePerDay" />
+            </view>
+            <view class="form-item">
+                <text class="form-label">技能标签 <text class="optional">（必填 · 至少选 1 个，用于与商家需求匹配）</text></text>
+                <block wx:for="{{skillGroups}}" wx:key="group" wx:for-item="g">
+                    <text class="skill-group-name">{{g.group}}</text>
+                    <view class="skill-tags">
+                        <text
+                            wx:for="{{g.tags}}"
+                            wx:key="*this"
+                            wx:for-item="tag"
+                            class="skill-tag {{skillMap[tag] ? 'skill-tag-on' : ''}}"
+                            bindtap="toggleSkill"
+                            data-tag="{{tag}}"
+                        >{{tag}}</text>
+                    </view>
+                </block>
+            </view>
+        </block>
+
+        <block wx:else>
+            <view class="form-item">
+                <text class="form-label">公司 / 团队名称</text>
+                <input class="form-input" value="{{company}}" placeholder="例如 宏图外贸" placeholder-class="picker-placeholder" bindinput="bindField" data-field="company" />
+            </view>
+            <view class="form-item">
+                <text class="form-label">联系人</text>
+                <input class="form-input" value="{{contact}}" placeholder="联系人姓名" placeholder-class="picker-placeholder" bindinput="bindField" data-field="contact" />
+            </view>
+        </block>
+
+        <view class="form-item">
+            <text class="form-label">联系电话 <text class="optional">（选填）</text></text>
+            <input class="form-input" type="number" value="{{phone}}" placeholder="方便对方联系你" placeholder-class="picker-placeholder" bindinput="bindField" data-field="phone" />
+        </view>
+
+        <view class="form-item">
+            <text class="form-label">简介 <text class="optional">（选填）</text></text>
+            <textarea class="form-textarea" value="{{intro}}" placeholder="{{role === 'interpreter' ? '例如：做过 3 次展会陪同，口语流利' : '例如：外贸公司，经常需要英语陪同'}}" placeholder-class="picker-placeholder" bindinput="bindField" data-field="intro" />
+        </view>
+
+        <text wx:if="{{formError}}" class="form-error">{{formError}}</text>
+
+        <button class="btn-primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">保存</button>
+    </view>
+</view>

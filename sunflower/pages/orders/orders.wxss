@@ -1,0 +1,82 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.state-retry {
+    margin-top: 28rpx;
+    padding: 0 44rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    font-size: 26rpx;
+    color: #c78d00;
+    background: #fff3c4;
+    border-radius: 36rpx;
+}
+
+/* 状态筛选 tab */
+.filter-row {
+    display: flex;
+    margin-bottom: 24rpx;
+    padding: 8rpx;
+    background: #f1ede3;
+    border-radius: 20rpx;
+}
+
+.filter-tab {
+    flex: 1;
+    height: 64rpx;
+    line-height: 64rpx;
+    text-align: center;
+    font-size: 26rpx;
+    color: #8a7f6d;
+    border-radius: 14rpx;
+}
+
+.filter-tab-active {
+    color: #4a3a00;
+    font-weight: 600;
+    background: #ffffff;
+    box-shadow: 0 4rpx 10rpx rgba(150, 110, 20, 0.1);
+}
+
+/* 消息通知入口 */
+.notice-entry {
+    display: flex;
+    align-items: center;
+    height: 84rpx;
+    padding: 0 26rpx;
+    margin-bottom: 20rpx;
+    background: #ffffff;
+    border-radius: 20rpx;
+    box-shadow: 0 4rpx 16rpx rgba(150, 110, 20, 0.07);
+}
+
+.notice-entry-icon {
+    font-size: 32rpx;
+    margin-right: 14rpx;
+}
+
+.notice-entry-text {
+    flex: 1;
+    font-size: 28rpx;
+    font-weight: 600;
+    color: #2b2620;
+}
+
+.notice-entry-badge {
+    min-width: 36rpx;
+    height: 36rpx;
+    line-height: 36rpx;
+    padding: 0 10rpx;
+    margin-right: 12rpx;
+    text-align: center;
+    font-size: 22rpx;
+    color: #ffffff;
+    background: #e11d48;
+    border-radius: 18rpx;
+}
+
+.notice-entry-arrow {
+    font-size: 32rpx;
+    color: #b3a996;
+}

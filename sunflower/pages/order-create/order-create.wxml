@@ -1,0 +1,80 @@
+<view wx:if="{{invalid}}" class="state-wrap">
+    <text class="state-text">预约信息不完整，请返回译员列表重新选择</text>
+</view>
+
+<view wx:else class="main">
+    <view class="card list-card">
+        <view class="row-top">
+            <text class="row-title">预约译员：{{interpreterName}}</text>
+        </view>
+        <text class="row-sub">{{dateLabel}}</text>
+    </view>
+
+    <view class="card form-card">
+        <view class="form-item">
+            <text class="form-label">服务日期</text>
+            <view class="picker-value">{{dateLabel}}</view>
+        </view>
+
+        <view class="form-item">
+            <text class="form-label">到场时间</text>
+            <picker mode="time" value="{{startTime}}" bindchange="onTimeChange">
+                <view class="picker-value">{{startTime}}</view>
+            </picker>
+        </view>
+
+        <view class="form-item">
+            <text class="form-label">服务地点 <text class="optional">（选填，点击地图选点）</text></text>
+            <view class="picker-value location-value" bindtap="chooseLocation">
+                <text class="{{locationName ? '' : 'picker-placeholder'}}">{{locationName ? locationName : '点击选择服务地点'}}</text>
+            </view>
+            <text wx:if="{{locationAddress}}" class="row-meta location-address">{{locationAddress}}</text>
+            <text wx:if="{{locationName}}" class="location-clear" bindtap="clearLocation">清除</text>
+        </view>
+
+        <view class="form-item">
+            <text class="form-label">服务需求 <text class="optional">（选填）</text></text>
+            <textarea
+                class="form-textarea"
+                placeholder="例如：陪同接待来访客户，需要懂外贸流程"
+                placeholder-class="picker-placeholder"
+                value="{{requirements}}"
+                bindinput="onRequirementsInput"
+            />
+        </view>
+
+        <view class="form-item">
+            <text class="form-label">需要哪些技能 <text class="optional">（选填，译员会看到匹配度）</text></text>
+            <block wx:for="{{skillGroups}}" wx:key="group" wx:for-item="g">
+                <text class="skill-group-name">{{g.group}}</text>
+                <view class="skill-tags">
+                    <text
+                        wx:for="{{g.tags}}"
+                        wx:key="*this"
+                        wx:for-item="tag"
+                        class="skill-tag {{requiredSkillsMap[tag] ? 'skill-tag-on' : ''}}"
+                        bindtap="toggleRequiredSkill"
+                        data-tag="{{tag}}"
+                    >{{tag}}</text>
+                </view>
+            </block>
+        </view>
+
+        <view class="price-box">
+            <view class="price-row">
+                <text class="detail-label">日薪</text>
+                <text class="detail-strong">¥{{price}}</text>
+            </view>
+            <view class="price-row">
+                <text class="detail-label">提交后需支付定金（30%）</text>
+                <text class="detail-strong">¥{{deposit}}</text>
+            </view>
+        </view>
+
+        <text wx:if="{{formError}}" class="form-error">{{formError}}</text>
+
+        <button class="btn-primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">
+            提交预约
+        </button>
+    </view>
+</view>

@@ -1,0 +1,6 @@
+project.private.config.json
+session-export-*.json
+.env
+.env.*
+!.env.example
+node_modules/

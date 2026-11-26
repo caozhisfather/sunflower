@@ -1,0 +1,36 @@
+<view class="main">
+    <view class="cal-card card">
+        <view class="cal-head">
+            <view class="cal-nav {{canGoPrev ? '' : 'cal-nav-disabled'}}" bindtap="prevMonth">‹</view>
+            <text class="cal-title">{{monthLabel}}</text>
+            <view class="cal-nav" bindtap="nextMonth">›</view>
+        </view>
+
+        <view class="cal-week">
+            <text wx:for="{{weekdays}}" wx:key="*this" class="cal-week-item">{{item}}</text>
+        </view>
+
+        <view class="cal-grid">
+            <view
+                wx:for="{{days}}"
+                wx:key="date"
+                class="cal-cell {{item.inMonth && !item.isPast ? '' : 'cal-cell-out'}} {{item.selected ? 'cal-cell-on' : ''}} {{item.isToday ? 'cal-cell-today' : ''}}"
+                bindtap="toggleDay"
+                data-index="{{index}}"
+            >
+                <text class="cal-day">{{item.day}}</text>
+                <view wx:if="{{item.selected}}" class="cal-dot"></view>
+            </view>
+        </view>
+
+        <view class="cal-foot">
+            <text class="cal-count">已选 {{selectedCount}} 天</text>
+            <view class="cal-actions">
+                <view class="cal-action" bindtap="markMonth">本月全选</view>
+                <view class="cal-action cal-action-ghost" bindtap="clearAll">清空</view>
+            </view>
+        </view>
+    </view>
+
+    <view class="cal-hint">点击日期切换空闲状态，商家按日期筛选有空闲的译员</view>
+</view>

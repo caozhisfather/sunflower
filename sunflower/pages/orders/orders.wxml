@@ -1,0 +1,52 @@
+<view wx:if="{{authState === 'onboard'}}" class="state-wrap">
+    <text class="state-text">先到首页选择身份并填写昵称</text>
+    <view class="state-retry" bindtap="goHome">去首页</view>
+</view>
+
+<view wx:else class="main">
+    <view class="notice-entry" bindtap="goNotifications">
+        <text class="notice-entry-icon">🔔</text>
+        <text class="notice-entry-text">消息通知</text>
+        <text wx:if="{{unreadCount > 0}}" class="notice-entry-badge">{{unreadCount}}</text>
+        <text class="notice-entry-arrow">›</text>
+    </view>
+
+    <view class="filter-row">
+        <view
+            wx:for="{{filters}}"
+            wx:key="key"
+            class="filter-tab {{filter === item.key ? 'filter-tab-active' : ''}}"
+            bindtap="setFilter"
+            data-key="{{item.key}}"
+        >{{item.label}}</view>
+    </view>
+
+    <view wx:if="{{loading}}" class="state-wrap">
+        <text class="state-text">正在加载订单…</text>
+    </view>
+
+    <view wx:elif="{{orders.length === 0}}" class="state-wrap">
+        <text class="state-text">暂无订单消息</text>
+    </view>
+
+    <view wx:elif="{{viewOrders.length === 0}}" class="state-wrap">
+        <text class="state-text">该状态下暂无订单</text>
+    </view>
+
+    <block wx:else>
+        <view
+            wx:for="{{viewOrders}}"
+            wx:key="id"
+            class="card list-card"
+            bindtap="goDetail"
+            data-id="{{item.id}}"
+        >
+            <view class="row-top">
+                <text class="row-title">{{item.counterName}}</text>
+                <text class="chip {{item.statusClass}}">{{item.statusLabel}}</text>
+            </view>
+            <text class="row-sub">{{item.roleLabel}} · {{item.dateLabel}} {{item.startTime}}</text>
+            <text class="row-meta">¥{{item.price}}{{item.jobId ? ' 约定总薪资' : '/天'}} · 点击查看订单详情</text>
+        </view>
+    </block>
+</view>

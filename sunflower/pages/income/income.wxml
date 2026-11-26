@@ -1,0 +1,90 @@
+<view wx:if="{{authState === 'onboard'}}" class="state-wrap">
+    <text class="state-text">先到首页选择译员身份并填写昵称</text>
+    <view class="state-retry" bindtap="goHome">去首页</view>
+</view>
+
+<view wx:else class="main">
+    <view class="card summary-card">
+        <text class="summary-label">累计已结算</text>
+        <view class="summary-amount">
+            <text class="summary-unit">¥</text>
+            <text class="summary-num">{{settledTotal}}</text>
+        </view>
+        <text class="summary-sub">共 {{settledCount}} 笔 · 尾款已到账</text>
+        <view class="summary-split"></view>
+        <view class="summary-row">
+            <text class="summary-row-label">可结算余额</text>
+            <text class="summary-row-value">¥{{balance}}<text wx:if="{{pendingAmount > 0}}">（到账中 ¥{{pendingAmount}}）</text></text>
+        </view>
+        <view class="summary-row">
+            <text class="summary-row-label">待结算</text>
+            <text class="summary-row-value">¥{{pendingTotal}}（{{pendingCount}} 笔）</text>
+        </view>
+        <view class="summary-row">
+            <text class="summary-row-label">已提现</text>
+            <text class="summary-row-value">¥{{withdrawnTotal}}</text>
+        </view>
+        <button class="btn-primary settle-btn" loading="{{requesting}}" disabled="{{requesting}}" bindtap="requestSettlement">申请结算</button>
+    </view>
+
+    <view wx:if="{{settlementRecords.length > 0}}">
+        <text class="section-label">结算记录</text>
+        <view
+            wx:for="{{settlementRecords}}"
+            wx:key="id"
+            class="card list-card"
+        >
+            <view class="row-top">
+                <text class="row-title">结算单 #{{item.id}}</text>
+                <text class="chip {{item.status === 'done' ? 'chip-finished' : 'chip-accepted'}}">{{item.statusLabel}}</text>
+            </view>
+            <text class="row-sub">¥{{item.amount}} · {{item.timeLabel}}</text>
+        </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="state-wrap">
+        <text class="state-text">正在加载收入明细…</text>
+    </view>
+
+    <block wx:else>
+        <view wx:if="{{pendingRecords.length > 0}}">
+            <text class="section-label">待结算（服务已完成，等待商家付尾款）</text>
+            <view
+                wx:for="{{pendingRecords}}"
+                wx:key="id"
+                class="card list-card"
+                bindtap="goDetail"
+                data-id="{{item.id}}"
+            >
+                <view class="row-top">
+                    <text class="row-title">{{item.businessName}}</text>
+                    <text class="chip chip-completed">待付尾款</text>
+                </view>
+                <text class="row-sub">{{item.dateLabel}} {{item.startTime}}</text>
+                <text class="row-meta">日薪 ¥{{item.price}} · 定金 ¥{{item.deposit}} · 尾款 ¥{{item.rest}}</text>
+            </view>
+        </view>
+
+        <view wx:if="{{settledRecords.length > 0}}">
+            <text class="section-label">已结算明细</text>
+            <view
+                wx:for="{{settledRecords}}"
+                wx:key="id"
+                class="card list-card"
+                bindtap="goDetail"
+                data-id="{{item.id}}"
+            >
+                <view class="row-top">
+                    <text class="row-title">{{item.businessName}}</text>
+                    <text class="income-amount">+¥{{item.price}}</text>
+                </view>
+                <text class="row-sub">{{item.dateLabel}} {{item.startTime}}</text>
+                <text class="row-meta">{{item.paidLabel}} · 定金 ¥{{item.deposit}} + 尾款 ¥{{item.rest}}</text>
+            </view>
+        </view>
+
+        <view wx:if="{{settledRecords.length === 0 && pendingRecords.length === 0}}" class="state-wrap">
+            <text class="state-text">还没有收入记录，完成订单并收到尾款后会显示在这里</text>
+        </view>
+    </block>
+</view>

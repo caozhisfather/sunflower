@@ -1,0 +1,138 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.cal-card {
+    padding: 28rpx 20rpx 24rpx;
+}
+
+/* 顶部翻月 */
+.cal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16rpx 24rpx;
+}
+
+.cal-nav {
+    width: 72rpx;
+    height: 72rpx;
+    line-height: 68rpx;
+    text-align: center;
+    font-size: 44rpx;
+    color: #6b6155;
+    background: #f6f3ea;
+    border-radius: 50%;
+}
+
+.cal-nav-disabled {
+    opacity: 0.3;
+}
+
+.cal-title {
+    font-size: 32rpx;
+    font-weight: 700;
+    color: #2b2620;
+}
+
+/* 周表头 */
+.cal-week {
+    display: flex;
+    padding-bottom: 12rpx;
+}
+
+.cal-week-item {
+    flex: 1;
+    text-align: center;
+    font-size: 22rpx;
+    color: #a89f94;
+}
+
+/* 日期网格 */
+.cal-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cal-cell {
+    box-sizing: border-box;
+    width: 14.28%;
+    min-height: 88rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3rpx solid transparent;
+    border-radius: 14rpx;
+}
+
+.cal-day {
+    font-size: 28rpx;
+    color: #2b2620;
+}
+
+.cal-cell-out .cal-day {
+    color: #d9d2c4;
+}
+
+.cal-cell-today .cal-day {
+    color: #c78d00;
+    font-weight: 700;
+}
+
+.cal-cell-on {
+    background: #f7b500;
+}
+
+.cal-cell-on .cal-day {
+    color: #4a3a00;
+    font-weight: 600;
+}
+
+.cal-dot {
+    width: 8rpx;
+    height: 8rpx;
+    margin-top: 6rpx;
+    background: #4a3a00;
+    border-radius: 50%;
+}
+
+/* 底部操作 */
+.cal-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20rpx;
+    padding: 0 16rpx;
+}
+
+.cal-count {
+    font-size: 25rpx;
+    color: #c78d00;
+    font-weight: 600;
+}
+
+.cal-actions {
+    display: flex;
+}
+
+.cal-action {
+    padding: 10rpx 30rpx;
+    margin-left: 16rpx;
+    font-size: 24rpx;
+    color: #4a3a00;
+    background: #f7b500;
+    border-radius: 999rpx;
+}
+
+.cal-action-ghost {
+    color: #6b6155;
+    background: #f1ede3;
+}
+
+.cal-hint {
+    margin-top: 24rpx;
+    text-align: center;
+    font-size: 23rpx;
+    color: #b3a996;
+}

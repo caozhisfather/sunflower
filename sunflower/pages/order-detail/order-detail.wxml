@@ -1,0 +1,167 @@
+<view wx:if="{{authState === 'onboard'}}" class="state-wrap">
+    <text class="state-text">请先登录后再查看订单</text>
+</view>
+
+<view wx:elif="{{forbidden}}" class="state-wrap">
+    <text class="state-text">该订单不属于当前账号</text>
+</view>
+
+<view wx:elif="{{!order}}" class="state-wrap">
+    <text class="state-text">订单不存在或已被删除</text>
+</view>
+
+<view wx:else class="main">
+    <view class="card list-card">
+        <view class="row-top">
+            <text class="row-title">{{role === 'business' ? order.interpreterName || '译员' : order.businessName}}</text>
+            <text class="chip chip-{{order.status}}">{{statusLabel}}</text>
+        </view>
+        <text class="row-sub">{{role === 'business' ? '已预约译员' : '来自商家'}} · {{dateLabel}} {{order.startTime}}</text>
+        <text class="row-meta">预约编号 #{{order.id}}</text>
+    </view>
+
+    <view class="card list-card">
+        <text class="detail-label">服务需求</text>
+        <text class="detail-text">{{order.requirements || '未填写具体需求'}}</text>
+    </view>
+
+    <view wx:if="{{order.locationName}}" class="card list-card">
+        <view class="row-top">
+            <text class="detail-label">服务地点</text>
+            <text class="map-link" bindtap="openLocation">打开地图 ›</text>
+        </view>
+        <text class="detail-text">{{order.locationName}}</text>
+        <text wx:if="{{order.locationAddress}}" class="row-meta">{{order.locationAddress}}</text>
+    </view>
+
+    <view
+        wx:if="{{contact && (order.status === 'deposit_paid' || order.status === 'completed' || order.status === 'finished')}}"
+        class="card list-card"
+    >
+        <text class="detail-label">{{contact.label}}</text>
+        <view class="price-row">
+            <text class="detail-strong">{{contact.name}}</text>
+            <text wx:if="{{contact.phone}}" class="row-sub">{{contact.phone}}</text>
+        </view>
+        <text wx:if="{{contact.extra}}" class="row-meta">{{contact.extra}}</text>
+        <view class="row-top contact-actions">
+            <button wx:if="{{contact.callable}}" class="btn-ghost contact-call-btn" bindtap="callContact">拨打电话</button>
+            <text wx:if="{{role === 'interpreter'}}" class="map-link" bindtap="goBusinessDetail">查看商家主页 ›</text>
+        </view>
+    </view>
+
+    <view class="card list-card">
+        <view class="price-row">
+            <text class="detail-label">{{order.jobId ? '岗位约定总薪资' : '日薪'}}</text>
+            <text class="detail-strong">¥{{order.price}}</text>
+        </view>
+        <text wx:if="{{order.jobId}}" class="row-meta">预计 {{order.jobHours}} 小时 · ¥{{order.jobRate}}/{{order.jobPayUnit === 'hour' ? '小时' : (order.jobPayUnit === 'half' ? '半天' : '天')}}</text>
+        <text wx:if="{{order.jobTerms}}" class="row-meta">其他约定 · {{order.jobTerms}}</text>
+        <text wx:if="{{order.jobTravelAllowance > 0}}" class="row-meta">总薪资含交通补贴 ¥{{order.jobTravelAllowance}}</text>
+        <text wx:if="{{order.actualHours !== null && order.jobId}}" class="row-meta">实际工时 {{order.actualHours}} 小时 · {{order.hoursConfirmedAt ? '双方已确认' : '待公司确认'}}</text>
+        <text wx:if="{{order.jobId}}" class="map-link" bindtap="reportJobOrder">记录履约问题</text>
+        <view class="price-row">
+            <text class="detail-label">定金（30%）</text>
+            <text class="detail-strong">¥{{order.deposit}}</text>
+        </view>
+        <view class="price-row">
+            <text class="detail-label">尾款</text>
+            <text class="detail-strong">¥{{order.price - order.deposit}}</text>
+        </view>
+    </view>
+
+    <view class="card list-card">
+        <text class="detail-label">进展</text>
+        <view wx:for="{{timeline}}" wx:key="label" class="timeline-item">
+            <view class="timeline-dot"></view>
+            <view class="timeline-body">
+                <text class="timeline-label">{{item.label}}</text>
+                <text wx:if="{{item.time}}" class="timeline-time">{{item.time}}</text>
+            </view>
+        </view>
+    </view>
+
+    <!-- 商家操作 -->
+    <block wx:if="{{role === 'business'}}">
+        <button wx:if="{{order.jobId && order.status === 'deposit_paid' && order.actualHours > 0}}" class="btn-primary" disabled="{{busy}}" bindtap="confirmJobHours">确认实际工时</button>
+        <button wx:if="{{order.status === 'accepted'}}" class="btn-primary" loading="{{busy}}" disabled="{{busy}}" bindtap="payDeposit">
+            支付定金 ¥{{order.deposit}}
+        </button>
+        <button wx:if="{{order.status === 'completed'}}" class="btn-primary" loading="{{busy}}" disabled="{{busy}}" bindtap="payFinal">
+            支付尾款 ¥{{order.price - order.deposit}}
+        </button>
+        <button wx:if="{{order.status === 'pending' || order.status === 'accepted'}}" class="btn-ghost action-gap" loading="{{busy}}" disabled="{{busy}}" bindtap="openReschedule">
+            {{rescheduling ? '收起改期' : '改期'}}
+        </button>
+        <button wx:if="{{order.status === 'pending' || order.status === 'accepted' || order.status === 'deposit_paid'}}" class="btn-danger action-gap" loading="{{busy}}" disabled="{{busy}}" bindtap="cancelOrder">
+            取消预约
+        </button>
+
+        <view wx:if="{{rescheduling}}" class="card list-card">
+            <text class="detail-label">选择新的服务日期（改期后译员需重新确认）</text>
+            <picker mode="date" value="{{newDate || order.serviceDate}}" start="{{todayStr}}" end="2030-12-31" bindchange="onNewDateChange">
+                <view class="picker-value">{{newDate || '点击选择日期'}}</view>
+            </picker>
+            <text wx:if="{{rescheduleError}}" class="form-error">{{rescheduleError}}</text>
+            <button class="btn-primary" loading="{{busy}}" disabled="{{busy}}" bindtap="submitReschedule">确认改期</button>
+        </view>
+    </block>
+
+    <!-- 译员操作 -->
+    <block wx:if="{{role === 'interpreter'}}">
+        <navigator wx:if="{{order.status === 'pending'}}" class="btn-primary" url="/pages/task-detail/task-detail?id={{order.id}}">处理预约请求</navigator>
+        <input wx:if="{{order.jobId && order.status === 'deposit_paid' && order.actualHours === null}}" class="form-input" type="digit" value="{{actualHoursInput}}" bindinput="onActualHoursInput" placeholder="填写实际服务工时（小时）" />
+        <button wx:if="{{order.status === 'deposit_paid' && (!order.jobId || order.actualHours === null)}}" class="btn-primary" loading="{{busy}}" disabled="{{busy}}" bindtap="confirmDone">
+            {{order.jobId ? '提交实际工时' : '确认服务完成'}}
+        </button>
+        <text wx:if="{{depositExpired}}" class="expired-hint">服务日期已过，请尽快确认完成，商家将支付尾款</text>
+    </block>
+
+    <!-- 互评（订单完成后） -->
+    <block wx:if="{{order.status === 'finished'}}">
+        <view class="card list-card">
+            <text class="detail-label">互评</text>
+            <view wx:if="{{myReview}}" class="review-item">
+                <view class="row-top">
+                    <text class="row-title">我的评价</text>
+                    <text class="review-stars-text">{{myReviewStars}}</text>
+                </view>
+                <text wx:if="{{myReview.comment}}" class="row-sub">{{myReview.comment}}</text>
+            </view>
+            <view wx:else class="review-form">
+                <text class="row-sub">服务已完成，为对方打分（1-5 星）</text>
+                <view class="star-row">
+                    <text
+                        wx:for="{{[1, 2, 3, 4, 5]}}"
+                        wx:key="*this"
+                        class="star {{reviewRating >= item ? 'star-active' : ''}}"
+                        bindtap="onReviewRating"
+                        data-rating="{{item}}"
+                    >★</text>
+                </view>
+                <textarea
+                    class="form-textarea review-comment"
+                    placeholder="说说这次服务体验（选填）"
+                    value="{{reviewComment}}"
+                    bindinput="onReviewComment"
+                />
+                <button class="btn-primary" loading="{{submittingReview}}" disabled="{{submittingReview}}" bindtap="submitReview">提交评价</button>
+            </view>
+        </view>
+
+        <view wx:if="{{counterpartReview}}" class="card list-card">
+            <text class="detail-label">对方评价</text>
+            <view class="review-item">
+                <view class="row-top">
+                    <text class="row-title">{{counterpartReview.reviewerName || '对方'}}</text>
+                    <text class="review-stars-text">{{counterpartReviewStars}}</text>
+                </view>
+                <text wx:if="{{counterpartReview.comment}}" class="row-sub">{{counterpartReview.comment}}</text>
+            </view>
+        </view>
+    </block>
+
+    <view wx:if="{{order.status === 'finished' || order.status === 'cancelled'}}" class="state-wrap">
+        <text class="state-text">{{endText}}</text>
+    </view>
+</view>

@@ -1,0 +1,68 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.head-card {
+    display: flex;
+    align-items: center;
+}
+
+.head-avatar {
+    flex-shrink: 0;
+    width: 100rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    text-align: center;
+    font-size: 44rpx;
+    color: #4a3a00;
+    background: #ffe9a8;
+    border-radius: 50rpx;
+}
+
+.head-info {
+    flex: 1;
+    margin-left: 24rpx;
+    min-width: 0;
+}
+
+.head-price {
+    text-align: right;
+}
+
+.price-num {
+    font-size: 36rpx;
+    font-weight: 700;
+    color: #c78d00;
+}
+
+.price-unit {
+    font-size: 22rpx;
+    color: #a89f94;
+}
+
+.detail-label {
+    display: block;
+    font-size: 25rpx;
+    color: #a89f94;
+}
+
+.detail-text {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 28rpx;
+    line-height: 1.7;
+    color: #2b2620;
+}
+
+.price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12rpx 0;
+}
+
+.detail-strong {
+    font-size: 30rpx;
+    font-weight: 700;
+    color: #2b2620;
+}

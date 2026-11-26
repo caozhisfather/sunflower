@@ -1,0 +1,38 @@
+<view wx:if="{{!business}}" class="state-wrap">
+    <text class="state-text">商家不存在或未完善资料</text>
+</view>
+
+<view wx:else class="main">
+    <view class="card list-card head-card">
+        <view class="head-avatar">
+            <text>{{business.initial}}</text>
+        </view>
+        <view class="head-info">
+            <text class="row-title">{{business.name}}</text>
+            <text wx:if="{{business.company}}" class="row-sub">{{business.company}}</text>
+            <text wx:if="{{business.contact}}" class="row-meta">{{business.contact}}</text>
+        </view>
+    </view>
+
+    <view class="card list-card">
+        <text class="detail-label">商家介绍</text>
+        <text class="detail-text">{{business.intro || '暂无介绍'}}</text>
+    </view>
+
+    <view class="card list-card">
+        <view class="row-top">
+            <text class="detail-label">收到的评价</text>
+            <text class="review-stars-text" wx:if="{{ratingCount > 0}}">★ {{ratingAvg}} · {{ratingCount}} 条</text>
+            <text class="row-meta" wx:else>暂无评价</text>
+        </view>
+        <view wx:for="{{recentReviews}}" wx:key="id" class="review-item">
+            <view class="row-top">
+                <text class="row-title">{{item.reviewerName}}</text>
+                <text class="review-stars-text">{{item.stars}}</text>
+            </view>
+            <text wx:if="{{item.comment}}" class="row-sub">{{item.comment}}</text>
+        </view>
+    </view>
+
+    <button wx:if="{{business.callable}}" class="btn-primary" bindtap="callContact">联系商家</button>
+</view>

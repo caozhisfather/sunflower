@@ -1,0 +1,102 @@
+.main {
+    padding: 28rpx 32rpx 60rpx;
+}
+
+.state-retry {
+    margin-top: 28rpx;
+    padding: 0 44rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    font-size: 26rpx;
+    color: #c78d00;
+    background: #fff3c4;
+    border-radius: 36rpx;
+}
+
+.profile-head {
+    display: flex;
+    align-items: center;
+}
+
+.profile-avatar {
+    flex-shrink: 0;
+    width: 100rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    text-align: center;
+    font-size: 48rpx;
+    background: #ffe9a8;
+    border-radius: 50rpx;
+}
+
+.profile-info {
+    margin-left: 24rpx;
+}
+
+.stats-card {
+    display: flex;
+    align-items: center;
+    padding: 34rpx 0;
+}
+
+.stat-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-num {
+    font-size: 44rpx;
+    font-weight: 700;
+    color: #c78d00;
+}
+
+.stat-label {
+    margin-top: 6rpx;
+    font-size: 22rpx;
+    color: #a89f94;
+}
+
+.stat-divider {
+    width: 2rpx;
+    height: 60rpx;
+    background: #efe9da;
+}
+
+.menu-card {
+    margin-top: 28rpx;
+    padding: 8rpx 28rpx;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32rpx 0;
+    border-bottom: 2rpx solid #f5f1e6;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-text {
+    font-size: 29rpx;
+    color: #2b2620;
+}
+
+.menu-arrow {
+    font-size: 32rpx;
+    color: #c9bfa9;
+}
+
+.signout-bar {
+    margin-top: 48rpx;
+    text-align: center;
+}
+
+.signout-text {
+    font-size: 27rpx;
+    color: #a89f94;
+}
